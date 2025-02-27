@@ -51,7 +51,12 @@ def translate():
 
         # Return the translated text as a JSON response
         return (
-            jsonify({"message": response}),
+            jsonify(
+                {
+                    "success": True,
+                    "translation": response,
+                }
+            ),
             200,
         )
 

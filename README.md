@@ -75,6 +75,15 @@ By default, the application is configured to run on port 5001. You can access it
 
 - Translate Endpoint: To use the translation feature, send a POST request to http://localhost:5001/translate with the JSON data you wish to translate.
 
+### Access with Postman
+
+- API call:
+
+![./docs/apicall.png](./docs/apicall.png)
+
+- API response:
+
+![./docs/apiresponse.png](./docs/apiresponse.png)
 
 ### Stopping the Application
 To stop the running containers, execute:
