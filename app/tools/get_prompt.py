@@ -1,4 +1,4 @@
-def get_prompt(file_type: str = "json", output_language: str = "Hungarian"):
+def get_prompt(file_type: str, output_language: str = "Hungarian"):
     """
     Generate a prompt for translation tasks.
 
@@ -22,8 +22,8 @@ def get_prompt(file_type: str = "json", output_language: str = "Hungarian"):
     """
     # Define the base prompt template
     base_prompt = """You are a helpful assistant who helps the user translate the values of a {file_type} into {output_language}"
-                You must keep the structure of the json in youre response.
-                You must only return the json without explanation"""
+                You must keep the structure of the {file_type} in your response.
+                You must only return the {file_type} without explanation"""
 
     # Format the base prompt with the provided file type and output language
     return base_prompt.format(file_type=file_type, output_language=output_language)

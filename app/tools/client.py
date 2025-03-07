@@ -18,7 +18,7 @@ class TranslatorClient:
         """
         self.client = OpenAI()
 
-    def __call__(self, input_dict):
+    def __call__(self, input_dict, file_type):
         """
         Translate the values of the input dictionary.
 
@@ -31,11 +31,11 @@ class TranslatorClient:
         # Slice the input dictionary into smaller chunks
         dict_list = TranslatorClient.slice_dict(input_dict=input_dict, n=30)
         # Generate translations in parallel
-        results = self.generate_parallel(dict_list=dict_list)
+        results = self.generate_parallel(dict_list=dict_list, file_type=file_type)
 
         return results
 
-    def generate_parallel(self, dict_list, max_workers=5):
+    def generate_parallel(self, dict_list, file_type, max_workers=5):
         """
         Generate translations for multiple dictionary chunks in parallel.
 
@@ -50,7 +50,9 @@ class TranslatorClient:
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             # Submit translation tasks for each dictionary chunk
             future_to_prompt = {
-                executor.submit(self.__generate, input_data=input_data): input_data
+                executor.submit(
+                    self.__generate, input_data=input_data, file_type=file_type
+                ): input_data
                 for input_data in dict_list
             }
             # Collect results as they complete
@@ -68,6 +70,7 @@ class TranslatorClient:
         Returns:
             dict: The translated dictionary chunk.
         """
+
         # Create a chat completion request to OpenAI
         response = self.client.chat.completions.create(
             model="gpt-4o-2024-05-13",
@@ -76,7 +79,7 @@ class TranslatorClient:
             messages=[
                 {
                     "role": "system",
-                    "content": get_prompt(),
+                    "content": get_prompt(file_type=kwargs.get("file_type")),
                 },
                 {
                     "role": "user",
