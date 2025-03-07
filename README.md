@@ -77,13 +77,24 @@ By default, the application is configured to run on port 5001. You can access it
 
 ### Access with Postman
 
-- API call:
+- API call (JSON):
 
-![./docs/apicall.png](./docs/apicall.png)
+![./docs/apicalljson.png](./docs/apicalljson.png)
 
-- API response:
+- API response (JSON):
 
-![./docs/apiresponse.png](./docs/apiresponse.png)
+![./docs/apiresponsejson.png](./docs/apiresponsejson.png)
+
+- API call (LUA):
+
+`PLEASE NOTE: You have to provide the name of the global variable containing the data in the var_name variable. `
+![./docs/globalvar.png](./docs/globalvar.png)
+
+![./docs/apicalllua.png](./docs/apicalllua.png)
+
+- API response (LUA)
+
+![./docs/apiresponselua.png](./docs/apiresponselua.png)
 
 ### Stopping the Application
 To stop the running containers, execute:
@@ -101,3 +112,7 @@ If you’d like to contribute, please check out our [contributing guidelines](ht
 ## License
 
 This project is licensed under the MIT License – see the [LICENSE](https://github.com/tibidata/ai-json-translator/blob/develop/LICENSE) file for details.
+
+## Known Issues
+
+- When providing multiple keys in a global variable only the last keys data is returned
