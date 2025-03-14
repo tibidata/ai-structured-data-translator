@@ -26,15 +26,26 @@ def extract_lua(var_name: str, lua_code: str) -> dict:
     Returns:
         dict: A dictionary representing the key-value pairs extracted from the Lua table.
     """
+
+    def lua_table_to_dict(lua_table):
+        """
+        Recursively converts a Lua table to a Python dictionary.
+        """
+        py_dict = {}
+        for key, value in lua_table.items():
+            if hasattr(value, "items"):  # Check if value is a nested Lua table
+                py_dict[key] = lua_table_to_dict(value)  # Recursive conversion
+            else:
+                py_dict[key] = value.replace('"', "").replace("'", "")
+                print(py_dict[key])  # Store simple values directly
+        return py_dict
+
     lua = LuaRuntime(unpack_returned_tuples=True)  # Initialize Lua runtime
     lua.execute(lua_code)  # Execute the Lua script
 
     global_var = lua.globals()[var_name]  # Access the Lua table
 
-    keys = [k for k in global_var.keys()]  # Extract table keys
-    kv_dict = {k: dict(global_var[k]) for k in keys}  # Key-value pairs
-
-    return kv_dict
+    return lua_table_to_dict(global_var)
 
 
 def generate_lua(var_name: str, kv_dict: dict) -> str:
