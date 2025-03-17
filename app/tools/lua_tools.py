@@ -26,20 +26,32 @@ def extract_lua(var_name: str, lua_code: str) -> dict:
     Returns:
         dict: A dictionary representing the key-value pairs extracted from the Lua table.
     """
+
+    def lua_to_dict(lua_table):
+        """
+        Recursively converts a Lua table to a Python dictionary.
+        """
+        py_dict = {}
+        for key, value in lua_table.items():
+            if hasattr(value, "items"):  # Check if value is a nested Lua table
+                py_dict[key] = lua_to_dict(value)  # Recursive conversion
+            else:
+                py_dict[key] = value.replace('"', "").replace(
+                    "'", ""
+                )  # Store simple values directly
+        return py_dict
+
     lua = LuaRuntime(unpack_returned_tuples=True)  # Initialize Lua runtime
     lua.execute(lua_code)  # Execute the Lua script
 
     global_var = lua.globals()[var_name]  # Access the Lua table
 
-    keys = [k for k in global_var.keys()]  # Extract table keys
-    kv_dict = {k: dict(global_var[k]) for k in keys}  # Key-value pairs
-
-    return kv_dict
+    return lua_to_dict(global_var)
 
 
 def generate_lua(var_name: str, kv_dict: dict) -> str:
     """
-    Generates a Lua script defining a table from a given dictionary.
+    Generates a Lua script defining a table from a given dictionary, handling nested dictionaries.
 
     Args:
         var_name (str): The name of the Lua table to create.
@@ -48,16 +60,23 @@ def generate_lua(var_name: str, kv_dict: dict) -> str:
     Returns:
         str: A formatted Lua script defining the table with the given key-value pairs.
     """
-    for k, v in kv_dict.items():
-        header = '{var_name} = {{}}\n\n{var_name}["{key}"] = '.format(
-            var_name=var_name, key=k
-        )
-        body = (
-            "{"
-            + "".join(
-                '\n\t{i} = "{j}",'.format(i=i, j=j.replace("\n", "\\n"))
-                for i, j in v.items()
-            ).strip(",")
-            + "}"
-        )
-    return header + body
+
+    def dict_to_lua(d, indent=1):
+        lua_str = "{\n"
+        for k, v in d.items():
+            if isinstance(v, dict):
+                lua_str += (
+                    '{indent}"{key}" = '.format(indent="    " * indent, key=k)
+                    + dict_to_lua(v, indent + 1)
+                    + ",\n"
+                )
+            else:
+                lua_str += '{indent}"{key}" = "{value}",\n'.format(
+                    indent="    " * indent, key=k, value=str(v).replace("\n", "\\n")
+                )
+        lua_str += "    " * (indent - 1) + "}"
+        return lua_str
+
+    return '{var_name}={{}}\n\n{var_name}["{key}"] = '.format(
+        var_name=var_name, key=list(kv_dict.keys())[0]
+    ) + dict_to_lua(list(kv_dict.values())[0])
