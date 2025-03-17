@@ -1,3 +1,18 @@
+## [1.1.1] - 2025-03-07
+### Added
+- 
+
+### Changed
+- Lua extracting now using recursion to be able to handle nested inputs
+- Lua generation now using recursion to be able to generate nested lua dicts
+
+### Fixed
+- Patched the bug where sneding a nested lua object the ineer values are not returned correctly
+
+### Removed
+- 
+
+
 ## [1.1.0] - 2025-03-07
 ### Added
 - Added support for LUA files.
