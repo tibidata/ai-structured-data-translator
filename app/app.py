@@ -69,6 +69,7 @@ def translate():
             response = generate_lua(
                 var_name=request.form.get("var_name"),
                 kv_dict={k: client(v, "json") for k, v in kv_dict.items()},
+                key_type=request.form.get("key_type"),
             )
 
         # Return translated file as downloadable attachment

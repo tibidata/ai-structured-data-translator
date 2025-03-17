@@ -87,7 +87,12 @@ By default, the application is configured to run on port 5001. You can access it
 
 - API call (LUA):
 
-`PLEASE NOTE: You have to provide the name of the global variable containing the data in the var_name variable. `
+```
+ PLEASE NOTE:
+- You have to provide the name of the global variable containing the data in the var_name variable.
+- By default the keys will be reaturned as someKey if you want to use ["someKey"] notation add the key_type = bracket value as seen below.
+```
+
 ![./docs/globalvar.png](./docs/globalvar.png)
 
 ![./docs/apicalllua.png](./docs/apicalllua.png)

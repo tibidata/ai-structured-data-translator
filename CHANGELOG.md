@@ -1,4 +1,21 @@
-## [1.1.1] - 2025-03-07
+## [1.1.2] - 2025-03-17
+### Added
+- Support for two different key definitions in LUA tables (someKey, ["someKey"])
+
+### Changed
+- Changed the API call format
+- Updated the README
+
+### Fixed
+- Patched the bug that was introduced in the previous relase and caused the solution to return invalud LUA files.
+- Fixed the bug when the global variable is not defined in the LUA file, now it is added automatically if missing
+
+### Removed
+- 
+
+
+
+## [1.1.1] - 2025-03-17
 ### Added
 - 
 
